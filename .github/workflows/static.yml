@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>45-Day Data Engineering Study Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .stat-card h3 {
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        
+        .stat-card .value {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #38a169;
+        }
+        
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 10px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tr:hover {
+            background: #f7fafc;
+        }
+        
+        .checkbox-cell {
+            text-align: center;
+        }
+        
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+        
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            border: 2px solid #e2e8f0;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .week-header {
+            background: #edf2f7 !important;
+            color: #2d3748;
+            font-weight: bold;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e2e8f0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #48bb78 0%, #38a169 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .notes-section {
+            margin-top: 20px;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        
+        .export-section {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .streak-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            background: #fbbf24;
+            color: #78350f;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 45-Day Data Engineering Mastery Tracker</h1>
+        <p class="subtitle">Track your daily progress and build consistent learning habits</p>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Days Completed</h3>
+                <div class="value" id="daysCompleted">0</div>
+                <small>out of 45 days</small>
+            </div>
+            <div class="stat-card">
+                <h3>Total Hours</h3>
+                <div class="value" id="totalHours">0</div>
+                <small>hours studied</small>
+            </div>
+            <div class="stat-card">
+                <h3>Completion Rate</h3>
+                <div class="value" id="completionRate">0%</div>
+            </div>
+            <div class="stat-card">
+                <h3>Current Streak</h3>
+                <div class="value" id="currentStreak">0</div>
+                <small>days 🔥</small>
+            </div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%">0%</div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn-primary" onclick="saveProgress()">💾 Save Progress</button>
+            <button class="btn-secondary" onclick="exportToCSV()">📊 Export to CSV</button>
+            <button class="btn-danger" onclick="resetTracker()">🔄 Reset All</button>
+        </div>
+        
+        <div class="table-container">
+            <table id="trackerTable">
+                <thead>
+                    <tr>
+                        <th>Day</th>
+                        <th>Topic</th>
+                        <th>Completed</th>
+                        <th>Hours Studied</th>
+                        <th>Practice Done</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="trackerBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const studyPlan = [
+            { week: "Week 1: Python Fundamentals", days: [
+                { day: 1, topic: "Python Basics Review & Advanced Concepts" },
+                { day: 2, topic: "Data Structures & Algorithms Practice" },
+                { day: 3, topic: "Advanced Python - Decorators & Generators" },
+                { day: 4, topic: "File Handling & Error Management" },
+                { day: 5, topic: "Python for Data Engineering - ETL Scripts" },
+                { day: 6, topic: "LeetCode Python Problems (Arrays & Strings)" },
+                { day: 7, topic: "Build ETL Script Project" }
+            ]},
+            { week: "Week 2: SQL Mastery", days: [
+                { day: 8, topic: "Advanced SQL - Window Functions" },
+                { day: 9, topic: "CTEs, Subqueries & Complex Joins" },
+                { day: 10, topic: "Query Optimization & Execution Plans" },
+                { day: 11, topic: "SQL Practice - HackerRank/LeetCode" },
+                { day: 12, topic: "Indexing Strategies & Performance" },
+                { day: 13, topic: "Advanced SQL Patterns & Pivoting" },
+                { day: 14, topic: "Week 1-2 Review & Mini Project" }
+            ]},
+            { week: "Week 3: Databricks Foundations", days: [
+                { day: 15, topic: "Databricks Architecture & Clusters" },
+                { day: 16, topic: "Delta Lake Fundamentals" },
+                { day: 17, topic: "ACID Transactions & Time Travel" },
+                { day: 18, topic: "Medallion Architecture - Bronze Layer" },
+                { day: 19, topic: "Medallion Architecture - Silver Layer" },
+                { day: 20, topic: "Medallion Architecture - Gold Layer" },
+                { day: 21, topic: "Build End-to-End Medallion Pipeline" }
+            ]},
+            { week: "Week 4: Advanced Databricks", days: [
+                { day: 22, topic: "PySpark Fundamentals & Transformations" },
+                { day: 23, topic: "Delta Live Tables" },
+                { day: 24, topic: "Auto Loader & Streaming Ingestion" },
+                { day: 25, topic: "Performance Tuning - Partitioning" },
+                { day: 26, topic: "Z-Ordering & Optimization Commands" },
+                { day: 27, topic: "Streaming Pipeline Project" },
+                { day: 28, topic: "Week 3-4 Review & Assessment" }
+            ]},
+            { week: "Week 5: Apache Airflow", days: [
+                { day: 29, topic: "Airflow Fundamentals & DAG Creation" },
+                { day: 30, topic: "Task Dependencies & Operators" },
+                { day: 31, topic: "Sensors, Branching & XComs" },
+                { day: 32, topic: "Dynamic DAG Generation" },
+                { day: 33, topic: "Scheduling & SLA Monitoring" },
+                { day: 34, topic: "Airflow + Databricks Integration" },
+                { day: 35, topic: "Production-Ready DAG Project" }
+            ]},
+            { week: "Week 6: AWS & Cloud Services", days: [
+                { day: 36, topic: "AWS S3 Deep Dive" },
+                { day: 37, topic: "IAM Roles, Policies & Security" },
+                { day: 38, topic: "AWS Glue & Lambda Functions" },
+                { day: 39, topic: "Redshift Architecture" },
+                { day: 40, topic: "AWS Step Functions" },
+                { day: 41, topic: "Kinesis for Real-Time Streaming" },
+                { day: 42, topic: "Serverless Data Pipeline Project" }
+            ]},
+            { week: "Week 7: Capstone Project", days: [
+                { day: 43, topic: "Capstone - Architecture Design & Setup" },
+                { day: 44, topic: "Capstone - Implementation" },
+                { day: 45, topic: "Capstone - Documentation & Portfolio" }
+            ]}
+        ];
+
+        let trackerData = {};
+
+        function initializeTracker() {
+            const tbody = document.getElementById('trackerBody');
+            tbody.innerHTML = '';
+            
+            studyPlan.forEach(week => {
+                const weekRow = document.createElement('tr');
+                weekRow.innerHTML = `<td colspan="6" class="week-header">${week.week}</td>`;
+                tbody.appendChild(weekRow);
+                
+                week.days.forEach(day => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><strong>Day ${day.day}</strong></td>
+                        <td>${day.topic}</td>
+                        <td class="checkbox-cell">
+                            <input type="checkbox" id="complete-${day.day}" onchange="updateStats()">
+                        </td>
+                        <td class="checkbox-cell">
+                            <input type="number" id="hours-${day.day}" min="0" max="10" step="0.5" value="0" onchange="updateStats()">
+                        </td>
+                        <td class="checkbox-cell">
+                            <input type="checkbox" id="practice-${day.day}" onchange="updateStats()">
+                        </td>
+                        <td>
+                            <textarea id="notes-${day.day}" placeholder="Add notes..." rows="1"></textarea>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            });
+            
+            loadProgress();
+            updateStats();
+        }
+
+        function updateStats() {
+            let daysCompleted = 0;
+            let totalHours = 0;
+            let currentStreak = 0;
+            let lastCompletedDay = 0;
+            
+            for (let i = 1; i <= 45; i++) {
+                const checkbox = document.getElementById(`complete-${i}`);
+                const hours = parseFloat(document.getElementById(`hours-${i}`).value) || 0;
+                
+                if (checkbox && checkbox.checked) {
+                    daysCompleted++;
+                    totalHours += hours;
+                    
+                    if (i === lastCompletedDay + 1) {
+                        currentStreak++;
+                        lastCompletedDay = i;
+                    }
+                }
+            }
+            
+            const completionRate = ((daysCompleted / 45) * 100).toFixed(1);
+            
+            document.getElementById('daysCompleted').textContent = daysCompleted;
+            document.getElementById('totalHours').textContent = totalHours.toFixed(1);
+            document.getElementById('completionRate').textContent = completionRate + '%';
+            document.getElementById('currentStreak').textContent = currentStreak;
+            
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = completionRate + '%';
+            progressFill.textContent = completionRate + '%';
+        }
+
+        function saveProgress() {
+            const data = {};
+            
+            for (let i = 1; i <= 45; i++) {
+                data[i] = {
+                    completed: document.getElementById(`complete-${i}`).checked,
+                    hours: document.getElementById(`hours-${i}`).value,
+                    practice: document.getElementById(`practice-${i}`).checked,
+                    notes: document.getElementById(`notes-${i}`).value
+                };
+            }
+            
+            localStorage.setItem('studyTrackerData', JSON.stringify(data));
+            alert('✅ Progress saved successfully!');
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('studyTrackerData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                
+                for (let i = 1; i <= 45; i++) {
+                    if (data[i]) {
+                        document.getElementById(`complete-${i}`).checked = data[i].completed;
+                        document.getElementById(`hours-${i}`).value = data[i].hours;
+                        document.getElementById(`practice-${i}`).checked = data[i].practice;
+                        document.getElementById(`notes-${i}`).value = data[i].notes;
+                    }
+                }
+            }
+        }
+
+        function resetTracker() {
+            if (confirm('⚠️ Are you sure you want to reset all progress? This cannot be undone.')) {
+                localStorage.removeItem('studyTrackerData');
+                
+                for (let i = 1; i <= 45; i++) {
+                    document.getElementById(`complete-${i}`).checked = false;
+                    document.getElementById(`hours-${i}`).value = 0;
+                    document.getElementById(`practice-${i}`).checked = false;
+                    document.getElementById(`notes-${i}`).value = '';
+                }
+                
+                updateStats();
+                alert('✅ Tracker reset successfully!');
+            }
+        }
+
+        function exportToCSV() {
+            let csv = 'Day,Topic,Completed,Hours Studied,Practice Done,Notes\n';
+            
+            studyPlan.forEach(week => {
+                csv += `"${week.week}",,,,,\n`;
+                week.days.forEach(day => {
+                    const completed = document.getElementById(`complete-${day.day}`).checked ? 'Yes' : 'No';
+                    const hours = document.getElementById(`hours-${day.day}`).value;
+                    const practice = document.getElementById(`practice-${day.day}`).checked ? 'Yes' : 'No';
+                    const notes = document.getElementById(`notes-${day.day}`).value.replace(/"/g, '""');
+                    
+                    csv += `${day.day},"${day.topic}",${completed},${hours},${practice},"${notes}"\n`;
+                });
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = '45_Day_Study_Tracker.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        initializeTracker();
+    </script>
+</body>
+</html>
